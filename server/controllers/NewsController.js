@@ -7,6 +7,11 @@ class NewsController{
         res.json(news);
     }
 
+    async remove(req, res){
+        let response = await New.findOneAndDelete({_id: req.body.id}).exec();
+        res.json(response);
+    }
+
     mockdb(req, res){
         const news = [
             {title: "WordPress 4.3 willbe rewritten in Node.js.", author:"Garbage", created_at: 1536289502, url: "http://google.com"},

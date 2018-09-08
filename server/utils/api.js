@@ -3,13 +3,29 @@ import New from '../models/New';
 
 const url = "http://hn.algolia.com/api/v1/search_by_date?query=nodejs";
 
+const createStory = (story) => {
+    console.log('new story: ',story.objectID);
+    story.story_id = story.objectID;
+    let newFromApi = new New(story);
+    newFromApi.save();
+}
+
+const storyDoesNotExist = async (story) => {
+   let stories = await New.find({ story_id: story.objectID }).exec();
+   return (stories.length == 0) ? true : false; 
+}
+
 const saveNews = (news) => {
-    news.forEach( n => {
-        if( (n.title || n.story_title) && (n.url || n.story_url)){
-            n.title = n.title || n.story_title;
-            n.url = n.url || n.story_url
-            let newFromApi = new New(n);
-            newFromApi.save();
+    news.forEach( story => {
+        if( (story.title || story.story_title) && (story.url || story.story_url)){
+            story.title = story.title || story.story_title;
+            story.url = story.url || story.story_url
+            
+            storyDoesNotExist(story).then( isNewStory => {
+                if( isNewStory ){
+                    createStory(story);
+                }
+            });
         }
     });
 }

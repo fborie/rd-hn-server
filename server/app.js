@@ -2,6 +2,7 @@ import express from 'express';
 import router from './routes';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import bodyParser from 'body-parser';
 import { getNews, getNewsEveryHour } from './utils/api';
 
 const db = mongoose.connect(
@@ -17,7 +18,14 @@ const corsOptions = {
     origin: 'http://localhost:3000',
     optionsSuccessStatus: 200 
 }
-app.use(cors(corsOptions));
+
+app.use(
+    cors(corsOptions)
+);
+
+app.use(
+	bodyParser.urlencoded({ extended: false })
+);
 
 app.use('/', router);
 
