@@ -6,11 +6,22 @@ import bodyParser from 'body-parser';
 import { getNews, getNewsEveryHour } from './utils/api';
 
 const db = mongoose.connect(
-    'mongodb://admin:qwerty.321@ds149742.mlab.com:49742/rd-hn-test-db',
+    'mongodb://reigndesign:qwerty.321@ds149742.mlab.com:49742/rd-hn-test-db',
     { 
         useNewUrlParser: true
     }
 );
+
+mongoose.connection.dropCollection('news').then( res => {
+    console.log(' [news] collection dropped');
+}).catch( err => {
+    console.log(' [news] collection non existent');
+})
+mongoose.connection.dropCollection('deletednews').then( res => {
+    console.log(' [deletednews] collection dropped');
+}).catch( err => {
+    console.log(' [deletednews] collection non existent');
+});
 
 const app = express();
 

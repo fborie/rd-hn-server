@@ -1,15 +1,6 @@
 import New from '../models/New';
 import DeletedNew from '../models/DeletedNew';
-
-const getStoryCopy = (story) => {
-    return { 
-        story_id: story.story_id,
-        title: story.title,
-        author: story.author,
-        created_at: story.created_at,
-        url: story.url
-    }
-};
+import { getStoryCopy } from '../utils/utils';
 
 class NewsController{
 
