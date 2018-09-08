@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
-const newModel = new Schema({
+const deletedNewModel = new Schema({
     story_id:{type: String},
     title: {type: String},
     author: {type: String},
@@ -9,4 +9,4 @@ const newModel = new Schema({
     url: {type: String},
 });
 
-export default mongoose.model('New', newModel);
+export default mongoose.model('DeletedNew', deletedNewModel);

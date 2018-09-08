@@ -1,18 +1,23 @@
 import request from 'request';
 import New from '../models/New';
+import DeletedNew from '../models/DeletedNew';
 
 const url = "http://hn.algolia.com/api/v1/search_by_date?query=nodejs";
 
 const createStory = (story) => {
-    console.log('new story: ',story.objectID);
     story.story_id = story.objectID;
     let newFromApi = new New(story);
     newFromApi.save();
 }
 
-const storyDoesNotExist = async (story) => {
+const checkStoryDoesNotExist = async (story) => {
    let stories = await New.find({ story_id: story.objectID }).exec();
    return (stories.length == 0) ? true : false; 
+}
+
+const checkStoryHasNotBeenRemoved = async (story) => {
+    let stories = await DeletedNew.find({ story_id: story.objectID}).exec();
+    return (stories.length == 0) ? true : false; 
 }
 
 const saveNews = (news) => {
@@ -21,8 +26,12 @@ const saveNews = (news) => {
             story.title = story.title || story.story_title;
             story.url = story.url || story.story_url
             
-            storyDoesNotExist(story).then( isNewStory => {
+            checkStoryDoesNotExist(story).then( isNewStory => {
                 if( isNewStory ){
+                    return checkStoryHasNotBeenRemoved(story);
+                }
+            }).then( wasNotRemoved => {
+                if( wasNotRemoved ){
                     createStory(story);
                 }
             });
