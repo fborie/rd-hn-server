@@ -5,8 +5,12 @@ const url = "http://hn.algolia.com/api/v1/search_by_date?query=nodejs";
 
 const saveNews = (news) => {
     news.forEach( n => {
-        let newFromApi = new New(n);
-        newFromApi.save();
+        if( (n.title || n.story_title) && (n.url || n.story_url)){
+            n.title = n.title || n.story_title;
+            n.url = n.url || n.story_url
+            let newFromApi = new New(n);
+            newFromApi.save();
+        }
     });
 }
 
